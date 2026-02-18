@@ -1,1 +1,129 @@
-{%- render 'cart-drawer' -%}
+<div
+  id="cart-drawer"
+  class="fixed inset-0 z-[100] invisible"
+  aria-hidden="true"
+>
+  <div
+    class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0"
+    id="cart-overlay"
+  ></div>
+
+  <div
+    class="absolute top-0 right-0 h-full w-full max-w-md bg-white text-black shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col"
+    id="cart-panel"
+  >
+    <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-black text-white">
+      <h2 class="text-2xl font-heading font-bold uppercase tracking-wide">
+        Your Cart (<span id="cart-count">{{ cart.item_count }}</span>)
+      </h2>
+      <button id="close-cart" class="text-gray-400 hover:text-white">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-6"></div>
+
+    <div class="p-6 border-t border-gray-100 bg-gray-50">
+      <div class="flex justify-between items-end mb-4">
+        <span class="text-sm font-bold uppercase text-gray-500">Subtotal</span>
+        <span id="cart-total" class="text-xl font-heading font-bold">{{ cart.total_price | money }}</span>
+      </div>
+      <a
+        href="/checkout"
+        class="block w-full bg-black text-white text-center font-bold uppercase py-4 hover:bg-red-600 transition-colors tracking-widest"
+      >
+        Checkout
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // AJAX Cart Logic
+  const cartDrawer = {
+    open() {
+      document.getElementById('cart-drawer').classList.remove('invisible');
+      document.getElementById('cart-overlay').classList.remove('opacity-0');
+      document.getElementById('cart-panel').classList.remove('translate-x-full');
+    },
+    close() {
+      document.getElementById('cart-overlay').classList.add('opacity-0');
+      document.getElementById('cart-panel').classList.add('translate-x-full');
+      setTimeout(() => {
+        document.getElementById('cart-drawer').classList.add('invisible');
+      }, 300);
+    },
+    async fetchCart() {
+      const res = await fetch('/cart.js');
+      const cart = await res.json();
+      this.render(cart);
+    },
+    render(cart) {
+      // Update Counters
+      document.getElementById('cart-count').innerText = cart.item_count;
+      document.getElementById('cart-total').innerText = '$' + (cart.total_price / 100).toFixed(2);
+
+      // Build HTML for Items
+      const container = document.getElementById('cart-items-container');
+      if (cart.items.length === 0) {
+        container.innerHTML = '<p class="text-center text-gray-500 py-10">Your cart is empty.</p>';
+        return;
+      }
+
+      container.innerHTML = cart.items
+        .map(
+          (item) => `
+        <div class="flex gap-4">
+          <img src="${item.featured_image.url}" class="w-20 h-20 object-cover rounded bg-gray-100">
+          <div>
+            <h3 class="font-bold text-sm uppercase">${item.product_title}</h3>
+            <p class="text-xs text-gray-500 mb-2">${item.variant_title || ''}</p>
+            <div class="flex items-center justify-between w-full">
+              <span class="font-mono text-sm">$${(item.price / 100).toFixed(2)}</span>
+              <span class="text-xs text-gray-400">Qty: ${item.quantity}</span>
+            </div>
+          </div>
+        </div>
+      `
+        )
+        .join('');
+    },
+  };
+
+  // Event Listeners
+  document.getElementById('close-cart').addEventListener('click', () => cartDrawer.close());
+  document.getElementById('cart-overlay').addEventListener('click', () => cartDrawer.close());
+
+  // Intercept all "Add to Cart" forms
+  document.addEventListener('submit', async (e) => {
+    if (e.target.getAttribute('action') === '/cart/add') {
+      e.preventDefault(); // Stop the redirect
+
+      const formData = new FormData(e.target);
+      await fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData,
+      });
+
+      // Refresh and Open Drawer
+      await cartDrawer.fetchCart();
+      cartDrawer.open();
+    }
+  });
+
+  // Load cart on page load (optional, to pre-fill)
+  cartDrawer.fetchCart();
+</script>
+
+{% schema %}
+{ "name": "Cart Drawer", "settings": [], "presets": [] }
+{% endschema %}

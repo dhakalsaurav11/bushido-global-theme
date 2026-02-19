@@ -1,0 +1,132 @@
+<section class="bg-[#F5F5F4] text-[#1C1917] border-t border-[#D6D3D1]">
+  <div class="px-6 py-12 md:px-12 border-b border-[#D6D3D1] flex flex-col md:flex-row justify-between items-end">
+    <div>
+      <h2 class="text-4xl md:text-6xl font-bold uppercase tracking-tighter leading-none text-[#1C1917]">
+        {{ section.settings.title }}
+      </h2>
+      <p class="mt-2 text-[10px] font-mono uppercase tracking-widest text-[#78716C]">
+        Index // {{ section.settings.collection.products_count | default: 0 }} Items
+      </p>
+    </div>
+
+    <a
+      href="{{ section.settings.collection.url }}"
+      class="hidden md:block text-xs font-bold uppercase tracking-widest hover:text-[#EA580C] transition-colors"
+    >
+      View Full Index →
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-l border-[#D6D3D1]">
+    {% assign collection = collections[section.settings.collection] %}
+
+    {% for product in collection.products limit: section.settings.limit %}
+      <div class="group relative block border-r border-b border-[#D6D3D1] bg-white hover:bg-[#FAFAFA] transition-colors aspect-[3/4] overflow-hidden">
+        <div class="w-full h-full relative flex items-center justify-center">
+          {% if product.featured_media.media_type == 'model' %}
+            <div class="w-full h-full cursor-grab active:cursor-grabbing z-10">
+              {{
+                product.featured_media
+                | model_viewer_tag:
+                  image_size: '600x',
+                  reveal: 'interaction',
+                  toggleable: true,
+                  data-model-id: product.featured_media.id,
+                  class: 'w-full h-full object-cover',
+                  interaction_prompt: 'none'
+              }}
+            </div>
+
+            <div class="absolute top-4 left-4 bg-[#EA580C] text-white border border-[#EA580C] px-2 py-1 text-[10px] font-bold font-mono tracking-widest uppercase z-0 animate-pulse pointer-events-none">
+              [3D]
+            </div>
+
+          {% else %}
+            <a href="{{ product.url }}" class="w-full h-full block">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 800 }}"
+                  alt="{{ product.title }}"
+                  class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                >
+              {% else %}
+                <div class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-300">NO IMG</div>
+              {% endif %}
+
+              <div
+                class="absolute inset-0 bg-[#EA580C]/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none mix-blend-multiply"
+              ></div>
+            </a>
+          {% endif %}
+        </div>
+
+        <a
+          href="{{ product.url }}"
+          class="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur border-t border-[#D6D3D1] p-4 flex justify-between items-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-20 pointer-events-auto cursor-pointer hover:bg-[#1C1917] hover:text-white group/link"
+        >
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-tight">{{ product.title }}</h3>
+            <p class="text-xs font-mono text-[#78716C] group-hover/link:text-gray-400">{{ product.price | money }}</p>
+          </div>
+          <span class="px-3 py-1 border border-[#D6D3D1] group-hover/link:border-white text-[10px] font-mono uppercase tracking-widest">
+            View
+          </span>
+        </a>
+
+        {% unless product.featured_media.media_type == 'model' %}
+          <div class="absolute top-4 left-4 mix-blend-difference text-white text-[10px] font-mono tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+            IMG.0{{ forloop.index }}
+          </div>
+        {% endunless %}
+      </div>
+    {% else %}
+      <div class="col-span-full p-24 text-center border-b border-[#D6D3D1]">
+        <p class="text-[#A8A29E] font-mono uppercase tracking-widest">
+          / System: Please Select a Collection in Editor /
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="md:hidden border-b border-[#D6D3D1] p-6 text-center">
+    <a
+      href="{{ section.settings.collection.url }}"
+      class="inline-block px-8 py-4 bg-[#1C1917] text-white font-bold uppercase tracking-[0.2em] text-xs"
+    >
+      View All
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Archive",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Latest Arrivals"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 12,
+      "step": 4,
+      "label": "Number of Products",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Archive"
+    }
+  ]
+}
+{% endschema %}

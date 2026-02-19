@@ -1,0 +1,96 @@
+<section class="min-h-screen bg-[#F5F5F4] text-[#1C1917] font-sans border-b border-[#D6D3D1]">
+  <div class="px-6 py-12 md:px-12 border-b border-[#D6D3D1] flex justify-between items-end">
+    <div>
+      <h1 class="text-6xl md:text-9xl font-bold uppercase tracking-tighter leading-none mb-2">Origin</h1>
+      <p class="text-[10px] font-mono uppercase tracking-widest text-[#78716C]">File: 001 // Mission Statement</p>
+    </div>
+
+    <div class="hidden md:block border border-[#1C1917] px-4 py-2">
+      <span class="text-xs font-bold uppercase tracking-widest"> Status: Declassified </span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 min-h-screen">
+    <div class="lg:col-span-7 p-6 md:p-12 border-r border-[#D6D3D1] flex flex-col justify-between">
+      <div class="prose prose-lg prose-stone max-w-none font-medium leading-relaxed text-[#44403C]">
+        {% if page.content != blank %}
+          {{ page.content }}
+        {% else %}
+          <p>
+            We do not build clothing. We build armor for the modern ronin.
+            <br>
+            <br>
+            Born in the high desert of Albuquerque, Bushido Global exists at the intersection of technical precision and
+            raw material. We reject the noise of fast fashion in favor of silence, durability, and form.
+            <br>
+            <br>
+            Every garment is a prototype. Every collection is a test.
+          </p>
+        {% endif %}
+      </div>
+
+      <div class="mt-16 grid grid-cols-2 gap-8 border-t border-[#D6D3D1] pt-8">
+        <div>
+          <h3 class="text-[10px] font-mono uppercase tracking-widest text-[#78716C] mb-2">HQ Coordinates</h3>
+          <p class="text-sm font-bold uppercase tracking-wider">
+            Kathmandu, Nepal<br>
+            27.7172° N, 85.3240° E
+          </p>
+        </div>
+        <div>
+          <h3 class="text-[10px] font-mono uppercase tracking-widest text-[#78716C] mb-2">Established</h3>
+          <p class="text-sm font-bold uppercase tracking-wider">
+            December 2022<br>
+            Project: Bushido
+          </p>
+        </div>
+        <div>
+          <h3 class="text-[10px] font-mono uppercase tracking-widest text-[#78716C] mb-2">Core Philosophy</h3>
+          <p class="text-sm font-bold uppercase tracking-wider">Utility / Silence / Form</p>
+        </div>
+        <div>
+          <h3 class="text-[10px] font-mono uppercase tracking-widest text-[#78716C] mb-2">System</h3>
+          <p class="text-sm font-bold uppercase tracking-wider">V.2.0 (Stable)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-5 relative bg-[#E7E5E4] overflow-hidden min-h-[50vh] lg:min-h-auto border-t lg:border-t-0 border-[#D6D3D1]">
+      {% if section.settings.image %}
+        <img
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          alt="Mission Visual"
+          class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+        >
+      {% else %}
+        <div class="w-full h-full flex items-center justify-center bg-[#D6D3D1]">
+          <span class="font-mono text-xs uppercase tracking-widest opacity-50">/ Visual Data Required /</span>
+        </div>
+      {% endif %}
+
+      <div class="absolute inset-0 border-[20px] border-[#F5F5F4] pointer-events-none opacity-50"></div>
+
+      <div class="absolute bottom-8 left-8 bg-white px-3 py-1 text-[10px] font-mono tracking-widest uppercase border border-[#D6D3D1]">
+        Fig. 001 // The Architect
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Mission Dossier",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Evidence Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mission Dossier"
+    }
+  ]
+}
+{% endschema %}

@@ -8,14 +8,24 @@
     </a>
 
     <nav class="hidden md:flex items-center gap-1 bg-[#F5F5F4] rounded-full px-1 py-1">
-      {% for link in linklists['main-menu'].links %}
-        <a
-          href="{{ link.url }}"
-          class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#57534E] hover:bg-white hover:text-[#1C1917] hover:shadow-sm rounded-full transition-all"
-        >
-          {{ link.title }}
-        </a>
-      {% endfor %}
+      <a
+        href="/"
+        class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#57534E] hover:bg-white hover:text-[#1C1917] hover:shadow-sm rounded-full transition-all"
+      >
+        Home
+      </a>
+      <a
+        href="/collections/all"
+        class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#57534E] hover:bg-white hover:text-[#1C1917] hover:shadow-sm rounded-full transition-all"
+      >
+        Catalog
+      </a>
+      <a
+        href="/pages/about-us"
+        class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#57534E] hover:bg-white hover:text-[#1C1917] hover:shadow-sm rounded-full transition-all"
+      >
+        Origin
+      </a>
     </nav>
 
     <button

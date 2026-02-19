@@ -10,9 +10,28 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        // The "Concrete" Identity
+        brand: {
+          bg: '#F5F5F4', // Stone-100 (Warm Grey/Concrete)
+          text: '#1C1917', // Stone-900 (Almost Black/Ink)
+          accent: '#EA580C', // Orange-600 (Industrial Safety Orange)
+          line: '#D6D3D1', // Stone-300 (Divider lines)
+        },
+      },
       fontFamily: {
-        heading: ['Teko', 'sans-serif'],
-        sans: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+        // "Swiss" Style (Clean, Objective)
+        sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        heading: ['Inter', 'sans-serif'], // Removing the "Teko" font
+      },
+      animation: {
+        marquee: 'marquee 25s linear infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
       },
     },
   },

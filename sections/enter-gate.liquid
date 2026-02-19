@@ -1,0 +1,58 @@
+<div id="bushido-gate" class="fixed inset-0 z-[9999] bg-transparent flex flex-col pointer-events-auto">
+  <div
+    id="gate-top"
+    class="relative w-full h-[50vh] bg-black z-50 transition-transform duration-[1500ms] ease-[cubic-bezier(0.87,0,0.13,1)] border-b border-red-600/30"
+  ></div>
+
+  <div
+    id="gate-bottom"
+    class="relative w-full h-[50vh] bg-black z-50 transition-transform duration-[1500ms] ease-[cubic-bezier(0.87,0,0.13,1)] border-t border-red-600/30"
+  ></div>
+
+  <div class="absolute inset-0 z-[60] flex items-center justify-center pointer-events-none">
+    <button id="gate-trigger" class="pointer-events-auto group cursor-pointer transition-opacity duration-500">
+      <div
+        class="w-6 h-6 bg-red-600 rounded-full animate-pulse group-hover:scale-[2] transition-transform duration-700 ease-out shadow-[0_0_40px_rgba(220,38,38,0.9)]"
+      ></div>
+
+      <span class="absolute top-12 left-1/2 -translate-x-1/2 text-[10px] font-heading font-bold tracking-[0.5em] text-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 whitespace-nowrap">
+        INITIALIZE
+      </span>
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.getElementById('gate-trigger');
+    const gateTop = document.getElementById('gate-top');
+    const gateBottom = document.getElementById('gate-bottom');
+    const gate = document.getElementById('bushido-gate');
+
+    // 1. CHECK MEMORY: Has the user entered before?
+    if (sessionStorage.getItem('bushido-entered')) {
+      // If yes, destroy the gate immediately.
+      gate.style.display = 'none';
+    }
+
+    // 2. Click Handler
+    if (trigger) {
+      trigger.addEventListener('click', () => {
+        // Move Top Up
+        gateTop.classList.add('-translate-y-full');
+
+        // Move Bottom Down
+        gateBottom.classList.add('translate-y-full');
+
+        // Hide Button
+        trigger.classList.add('opacity-0', 'pointer-events-none');
+
+        // 3. Save to Memory & Cleanup
+        setTimeout(() => {
+          gate.style.display = 'none'; // Remove from DOM
+          sessionStorage.setItem('bushido-entered', 'true'); // Mark as "Entered"
+        }, 1500);
+      });
+    }
+  });
+</script>

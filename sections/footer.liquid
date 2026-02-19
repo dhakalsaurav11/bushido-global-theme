@@ -1,106 +1,79 @@
-<footer class="bg-black text-white border-t border-gray-900 pt-20 pb-10">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
-      <div class="md:col-span-1">
-        <a href="/" class="text-2xl font-black uppercase tracking-tighter block mb-6">
-          Bushido<span class="text-red-600">.</span>
-        </a>
-        <p class="text-gray-500 text-sm leading-relaxed">
-          Global streetwear from the heart of Nepal. <br>
-          Engineered for the modern samurai.
-        </p>
+<footer class="bg-[#F5F5F4] text-[#1C1917] border-t border-[#D6D3D1] py-10">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+    <div class="flex flex-col md:flex-row justify-between items-start gap-10 md:gap-20">
+      <div class="w-full md:w-1/2">
+        <h3 class="text-[10px] font-mono uppercase tracking-widest text-[#78716C] mb-3">/ Join Network</h3>
+
+        {% form 'customer' %}
+          <div class="relative group">
+            <input
+              type="email"
+              name="contact[email]"
+              placeholder="ENTER_EMAIL"
+              class="w-full bg-transparent border-b border-[#1C1917] py-2 text-lg md:text-xl font-bold uppercase tracking-widest placeholder-[#A8A29E] focus:outline-none focus:border-[#EA580C] transition-colors rounded-none"
+              required
+            >
+            <button
+              type="submit"
+              class="absolute right-0 top-1/2 -translate-y-1/2 text-[#1C1917] hover:text-[#EA580C] font-bold uppercase text-[10px] tracking-widest"
+            >
+              [Submit]
+            </button>
+          </div>
+        {% endform %}
       </div>
 
-      {% for block in section.blocks %}
-        {% case block.type %}
-          {% when 'link_list' %}
-            <div class="md:col-span-1">
-              <h3 class="text-sm font-bold uppercase tracking-widest mb-6 text-gray-400">
-                {{ block.settings.heading }}
-              </h3>
-              <ul class="space-y-4 text-sm font-medium">
-                {% for link in block.settings.menu.links %}
-                  <li>
-                    <a href="{{ link.url }}" class="hover:text-red-600 transition-colors">
-                      {{ link.title }}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
+      <div class="flex gap-12 md:gap-24">
+        <div>
+          <h3 class="text-[10px] font-mono uppercase tracking-widest text-[#78716C] mb-3">/ Index</h3>
+          <ul class="space-y-1">
+            {% for link in linklists['main-menu'].links %}
+              <li>
+                <a
+                  href="{{ link.url }}"
+                  class="text-xs font-bold uppercase tracking-widest hover:text-[#EA580C] transition-colors"
+                >
+                  {{ link.title }}
+                </a>
+              </li>
+            {% endfor %}
+            <li>
+              <a
+                href="/search"
+                class="text-xs font-bold uppercase tracking-widest hover:text-[#EA580C] transition-colors"
+              >
+                Search
+              </a>
+            </li>
+          </ul>
+        </div>
 
-          {% when 'newsletter' %}
-            <div class="md:col-span-1">
-              <h3 class="text-sm font-bold uppercase tracking-widest mb-6 text-gray-400">Stay Updated</h3>
-              {% form 'customer', class: 'flex flex-col gap-4' %}
-                <input type="hidden" name="contact[tags]" value="newsletter">
-                <div class="relative">
-                  <input
-                    type="email"
-                    name="contact[email]"
-                    placeholder="ENTER EMAIL"
-                    class="w-full bg-transparent border-b border-gray-700 py-3 text-sm focus:outline-none focus:border-white transition-colors uppercase placeholder-gray-600"
-                    required
-                  >
-                  <button type="submit" class="absolute right-0 top-3 text-gray-400 hover:text-white">→</button>
-                </div>
-              {% endform %}
-            </div>
-        {% endcase %}
-      {% endfor %}
+        <div>
+          <h3 class="text-[10px] font-mono uppercase tracking-widest text-[#78716C] mb-3">/ System</h3>
+          <ul class="space-y-1 text-xs text-[#57534E]">
+            <li><a href="/policies/shipping-policy" class="hover:text-[#1C1917]">Shipping</a></li>
+            <li><a href="/policies/refund-policy" class="hover:text-[#1C1917]">Returns</a></li>
+            <li><a href="/policies/terms-of-service" class="hover:text-[#1C1917]">Terms</a></li>
+            <li><a href="/policies/privacy-policy" class="hover:text-[#1C1917]">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <div class="border-t border-gray-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600 uppercase tracking-wider">
-      <p>&copy; {{ 'now' | date: '%Y' }} Bushido Global LLC. All Rights Reserved.</p>
+    <div class="mt-10 pt-4 border-t border-[#D6D3D1] flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-baseline gap-4">
+        <span class="text-2xl font-bold uppercase tracking-tighter text-[#D6D3D1] select-none"> Bushido Global </span>
+        <span class="text-[9px] font-mono uppercase tracking-widest text-[#78716C]"> © 2026 </span>
+      </div>
 
-      <div class="flex gap-6">
-        <a href="#" class="hover:text-white transition-colors">Instagram</a>
-        <a href="#" class="hover:text-white transition-colors">TikTok</a>
+      <div class="flex items-center gap-2 px-3 py-1 bg-white border border-[#D6D3D1] rounded-full">
+        <span class="w-1.5 h-1.5 bg-[#EA580C] rounded-full animate-pulse"></span>
+        <span class="text-[9px] font-mono uppercase tracking-widest text-[#1C1917]"> Sys. Normal </span>
       </div>
     </div>
   </div>
 </footer>
 
 {% schema %}
-{
-  "name": "Footer",
-  "blocks": [
-    {
-      "type": "link_list",
-      "name": "Menu",
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading",
-          "default": "Quick Links"
-        },
-        {
-          "type": "link_list",
-          "id": "menu",
-          "label": "Menu",
-          "default": "footer"
-        }
-      ]
-    },
-    {
-      "type": "newsletter",
-      "name": "Newsletter",
-      "limit": 1
-    }
-  ],
-  "presets": [
-    {
-      "name": "Footer",
-      "blocks": [
-        {
-          "type": "link_list"
-        },
-        {
-          "type": "newsletter"
-        }
-      ]
-    }
-  ]
-}
+{ "name": "Compact Footer", "settings": [] }
 {% endschema %}

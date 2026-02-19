@@ -1,0 +1,131 @@
+<style>
+  /* 1. Hide the Default Cursor globally */
+  @media (pointer: fine) {
+    body,
+    a,
+    button,
+    input,
+    textarea,
+    select {
+      cursor: none !important;
+    }
+  }
+
+  /* 2. The Dot (Instant) */
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background-color: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference; /* Inverts color */
+    transform: translate(-50%, -50%);
+  }
+
+  /* 3. The Ring (Laggy Follower) */
+  .cursor-outline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    mix-blend-mode: difference;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background-color 0.2s; /* Snap animation */
+    will-change: transform;
+  }
+
+  /* 4. Hover State (Locked On) */
+  body.hovering .cursor-outline {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: transparent;
+  }
+
+  /* Hide on Mobile */
+  @media (pointer: coarse) {
+    .cursor-dot,
+    .cursor-outline {
+      display: none;
+    }
+  }
+</style>
+
+<div id="cursor-dot" class="cursor-dot"></div>
+<div id="cursor-outline" class="cursor-outline"></div>
+
+<script>
+  const dot = document.getElementById('cursor-dot');
+  const outline = document.getElementById('cursor-outline');
+
+  let mouseX = 0;
+  let mouseY = 0;
+
+  // Variables for the "Lag" physics
+  let outlineX = 0;
+  let outlineY = 0;
+
+  // 1. Track Mouse Position
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+    // Move Dot instantly
+    dot.style.left = `${mouseX}px`;
+    dot.style.top = `${mouseY}px`;
+  });
+
+  // 2. Animate Outline (The Physics Loop)
+  function animateCursor() {
+    // Linear Interpolation (Lerp) for smooth lag
+    // 0.15 = speed (lower is slower/laggier)
+    outlineX += (mouseX - outlineX) * 0.15;
+    outlineY += (mouseY - outlineY) * 0.15;
+
+    outline.style.left = `${outlineX}px`;
+    outline.style.top = `${outlineY}px`;
+
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // 3. Hover Effects (Snapping)
+  // Find all interactive elements
+  const interactiveElements = document.querySelectorAll('a, button, input, textarea, select');
+
+  interactiveElements.forEach((el) => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+  });
+
+  // Re-run listener attachment periodically for AJAX content (like the cart drawer)
+  setInterval(() => {
+    const newElements = document.querySelectorAll('a:not([data-hover-attached]), button:not([data-hover-attached])');
+    newElements.forEach((el) => {
+      el.setAttribute('data-hover-attached', 'true');
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+  }, 2000);
+
+  // 4. Click Effect (Optional Pop)
+  document.addEventListener('mousedown', () => {
+    outline.style.transform = 'translate(-50%, -50%) scale(0.8)';
+  });
+  document.addEventListener('mouseup', () => {
+    outline.style.transform = 'translate(-50%, -50%) scale(1)';
+  });
+</script>
+
+{% schema %}
+{ "name": "Custom Cursor", "settings": [] }
+{% endschema %}

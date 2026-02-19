@@ -10,7 +10,11 @@
     {{ 'base.css' | asset_url | stylesheet_tag }}
   </head>
 
-  <body class="bg-black text-white antialiased">
+  <body class="bg-[#F5F5F4] text-[#1C1917] antialiased selection:bg-orange-600 selection:text-white">
+    {% section 'enter-gate' %}
+    {% section 'noise-overlay' %}
+    {% comment %} {% section 'hud' %} {% endcomment %}
+    {% section 'announcement-bar' %}
     {% section 'header' %}
 
     <main id="MainContent" role="main">
@@ -21,6 +25,33 @@
     {% section 'cart-drawer' %}
     <script>
       window.shopUrl = '{{ request.origin }}';
+    </script>
+    {% section 'custom-cursor' %}
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+    <script>
+      // Initialize the Physics
+      const lenis = new Lenis({
+        duration: 1.2, // Higher = "Heavier" feel
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential easing
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false, // Keep native touch on mobile (better performance)
+        touchMultiplier: 2,
+      });
+
+      // The Animation Loop
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
+      requestAnimationFrame(raf);
+
+      // Optional: Connect Lenis to the HUD scroll bar if needed
+      // (Your current HUD script uses window.scrollY which Lenis updates automatically, so it works out of the box!)
     </script>
   </body>
 </html>

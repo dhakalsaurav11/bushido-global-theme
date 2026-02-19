@@ -1,0 +1,68 @@
+<div class="fixed inset-0 z-[40] pointer-events-none mix-blend-difference text-white select-none">
+  <div class="absolute top-6 left-6 md:top-8 md:left-8 flex flex-col items-start">
+    <span class="text-[10px] font-mono font-bold tracking-[0.2em] uppercase">
+      SYS. <span class="animate-pulse text-red-600">●</span> ONLINE
+    </span>
+    <span class="text-[10px] font-mono text-gray-400 tracking-widest mt-1"> V.2025.1 </span>
+  </div>
+
+  <div class="absolute top-6 right-6 md:top-8 md:right-8 text-right">
+    <span class="text-[10px] font-mono font-bold tracking-[0.2em] uppercase block">
+      LOC: ABQ <span class="text-gray-600 mx-1">/</span> KTM
+    </span>
+    <span class="text-[10px] font-mono text-gray-400 tracking-widest block mt-1"> 35°N / 27°N </span>
+  </div>
+
+  <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8">
+    <span class="text-[10px] font-mono font-bold tracking-[0.2em] uppercase">
+      SCROLL: <span id="scroll-percent">000</span>%
+    </span>
+    <div class="w-24 h-[1px] bg-gray-800 mt-2 overflow-hidden">
+      <div id="scroll-bar" class="h-full bg-red-600 w-0 transition-all duration-100 ease-out"></div>
+    </div>
+  </div>
+
+  <div class="absolute bottom-6 right-6 md:bottom-8 md:right-8 text-right">
+    <span id="live-time" class="text-[10px] font-mono font-bold tracking-[0.2em] uppercase"> 00:00:00 </span>
+    <span class="text-[10px] font-mono text-gray-400 tracking-widest block mt-1"> MST / UTC-7 </span>
+  </div>
+
+  <div class="absolute top-1/2 left-6 w-2 h-[1px] bg-white/20"></div>
+  <div class="absolute top-1/2 right-6 w-2 h-[1px] bg-white/20"></div>
+</div>
+
+<script>
+  // 1. Live Clock
+  function updateTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-US', {
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+    document.getElementById('live-time').innerText = timeString;
+  }
+  setInterval(updateTime, 1000);
+  updateTime();
+
+  // 2. Scroll Percentage
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    const scrollPercent = Math.min(100, Math.max(0, (scrollTop / docHeight) * 100));
+
+    // Update Text (Pad with zeros like 005%)
+    document.getElementById('scroll-percent').innerText = Math.floor(scrollPercent).toString().padStart(3, '0');
+
+    // Update Bar Width
+    document.getElementById('scroll-bar').style.width = `${scrollPercent}%`;
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Bushido HUD",
+  "settings": []
+}
+{% endschema %}

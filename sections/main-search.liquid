@@ -1,0 +1,77 @@
+<section class="bg-black text-white min-h-screen py-24 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-24 text-center">
+      <h1 class="text-4xl font-heading font-bold uppercase tracking-tighter mb-8">Search</h1>
+
+      <form action="{{ routes.search_url }}" method="get" role="search" class="max-w-2xl mx-auto relative">
+        <input
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="TYPE TO SEARCH..."
+          class="w-full bg-transparent border-b-2 border-gray-800 py-4 text-2xl font-bold uppercase tracking-widest text-center focus:outline-none focus:border-red-600 transition-colors placeholder-gray-700"
+        >
+        <input type="hidden" name="type" value="product">
+
+        <button type="submit" class="absolute right-0 top-4 text-gray-500 hover:text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-8 h-8"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    {% if search.performed %}
+      <div class="mb-12">
+        <h2 class="text-xl text-gray-400 uppercase tracking-widest text-center">
+          {{ search.results_count }} Results for "{{ search.terms }}"
+        </h2>
+      </div>
+
+      {% if search.results_count > 0 %}
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
+          {% for item in search.results %}
+            {% if item.object_type == 'product' %}
+              <a href="{{ item.url }}" class="group block">
+                <div class="relative aspect-[3/4] overflow-hidden bg-gray-900 mb-4">
+                  {% if item.featured_image %}
+                    <img
+                      src="{{ item.featured_image | image_url: width: 600 }}"
+                      alt="{{ item.title }}"
+                      class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    >
+                  {% endif %}
+                </div>
+
+                <h3 class="text-lg font-bold uppercase tracking-wide group-hover:text-red-600 transition-colors">
+                  {{ item.title }}
+                </h3>
+                <p class="text-gray-500 font-mono text-sm mt-1">
+                  {{ item.price | money }}
+                </p>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-24 border-t border-gray-900">
+          <p class="text-gray-500 text-lg">No products found. Try a different keyword.</p>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search Page",
+  "settings": []
+}
+{% endschema %}

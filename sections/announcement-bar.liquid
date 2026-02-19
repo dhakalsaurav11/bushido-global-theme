@@ -1,0 +1,44 @@
+{% if section.settings.show_announcement %}
+  <div class="bg-[#1C1917] text-white py-2 border-b border-black overflow-hidden flex relative z-50">
+    <div class="animate-marquee whitespace-nowrap flex-shrink-0 flex gap-8 min-w-full items-center px-4">
+      {% for i in (1..10) %}
+        <span class="text-sm font-bold uppercase tracking-[0.2em]">
+          {{ section.settings.text }}
+        </span>
+        <span class="text-sm">★</span>
+      {% endfor %}
+    </div>
+
+    <div
+      class="animate-marquee whitespace-nowrap flex-shrink-0 flex gap-8 min-w-full items-center px-4"
+      aria-hidden="true"
+    >
+      {% for i in (1..10) %}
+        <span class="text-sm font-bold uppercase tracking-[0.2em]">
+          {{ section.settings.text }}
+        </span>
+        <span class="text-sm">★</span>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Hype Bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show Announcement",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "WORLDWIDE SHIPPING • NEW DROP LIVE"
+    }
+  ]
+}
+{% endschema %}

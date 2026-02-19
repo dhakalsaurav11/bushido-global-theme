@@ -1,118 +1,109 @@
-<header
-  class="fixed top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference text-white transition-all duration-300"
-  id="site-header"
->
-  <button id="mobile-menu-toggle" class="md:hidden focus:outline-none">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="2"
-      stroke="currentColor"
-      class="w-8 h-8"
+<header class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] transition-transform duration-300 w-auto max-w-[90vw]">
+  <div class="bg-white/90 backdrop-blur-md border border-[#D6D3D1] px-6 py-3 rounded-full shadow-2xl flex items-center gap-6 md:gap-8 justify-between">
+    <a
+      href="/"
+      class="font-bold text-lg tracking-tighter text-[#1C1917] hover:text-[#EA580C] transition-colors whitespace-nowrap"
     >
-      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-    </svg>
-  </button>
+      BUSHIDO
+    </a>
 
-  <a href="/" class="text-3xl font-heading font-bold tracking-wider uppercase">
-    Bushido
-    <span class="text-red-600">.</span>
-  </a>
+    <nav class="hidden md:flex items-center gap-1 bg-[#F5F5F4] rounded-full px-1 py-1">
+      {% for link in linklists['main-menu'].links %}
+        <a
+          href="{{ link.url }}"
+          class="px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#57534E] hover:bg-white hover:text-[#1C1917] hover:shadow-sm rounded-full transition-all"
+        >
+          {{ link.title }}
+        </a>
+      {% endfor %}
+    </nav>
 
-  <nav class="hidden md:flex gap-8 text-sm font-bold tracking-widest uppercase">
-    {% for link in linklists['main-menu'].links %}
-      <a href="{{ link.url }}" class="hover:text-red-500 transition-colors">
-        {{ link.title }}
+    <button
+      id="mobile-menu-trigger"
+      class="md:hidden text-xs font-bold uppercase tracking-widest text-[#1C1917] hover:text-[#EA580C]"
+    >
+      [MENU]
+    </button>
+
+    <div class="flex items-center gap-4 text-[#1C1917]">
+      <a href="{{ routes.search_url }}" class="hover:text-[#EA580C] transition-colors">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-4 h-4"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+        </svg>
       </a>
-    {% endfor %}
-  </nav>
 
-  <div class="flex items-center gap-6">
-    <a href="/search" class="hover:text-red-500 transition-colors">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        class="w-6 h-6"
+      <a
+        href="{{ routes.cart_url }}"
+        class="relative hover:text-[#EA580C] transition-colors flex items-center gap-2 group"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-      </svg>
-    </a>
-    <a href="/cart" class="relative hover:text-red-500 transition-colors">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        class="w-6 h-6"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-      </svg>
-      {% if cart.item_count > 0 %}
-        <span class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
-          {{ cart.item_count }}
-        </span>
-      {% endif %}
-    </a>
+        <span class="text-xs font-bold hidden md:inline group-hover:hidden">CART</span>
+        <span class="text-xs font-bold hidden group-hover:inline">OPEN</span>
+        <div class="w-2 h-2 bg-[#EA580C] rounded-full"></div>
+      </a>
+    </div>
   </div>
 </header>
 
 <div
-  id="mobile-menu-drawer"
-  class="fixed inset-0 z-[60] transform -translate-x-full transition-transform duration-500 bg-black text-white flex flex-col"
+  id="mobile-menu-overlay"
+  class="fixed inset-0 bg-[#F5F5F4] z-[80] transform translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col p-6"
 >
-  <div class="px-6 py-6 flex justify-between items-center border-b border-gray-900">
-    <span class="text-xl font-bold uppercase tracking-widest">Menu</span>
-    <button id="mobile-menu-close" class="focus:outline-none">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        class="w-8 h-8"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
+  <div class="flex justify-between items-end border-b border-[#D6D3D1] pb-6 mt-12">
+    <span class="text-[10px] font-mono uppercase tracking-widest text-[#78716C]"> // SYSTEM NAVIGATION </span>
+    <button id="mobile-menu-close" class="text-4xl font-light hover:text-[#EA580C] leading-none">&times;</button>
   </div>
 
-  <nav class="flex-1 flex flex-col p-8 gap-8 text-3xl font-black uppercase tracking-tighter">
+  <nav class="flex-grow flex flex-col justify-center space-y-4">
     {% for link in linklists['main-menu'].links %}
-      <a href="{{ link.url }}" class="hover:text-red-600 transition-colors">
+      <a
+        href="{{ link.url }}"
+        class="text-5xl font-bold uppercase tracking-tighter text-[#1C1917] hover:text-[#EA580C] hover:pl-4 transition-all duration-300 border-b border-transparent hover:border-[#EA580C] pb-2 w-full"
+      >
         {{ link.title }}
       </a>
     {% endfor %}
-    <a href="/account" class="text-xl text-gray-500 mt-auto">Account</a>
+    <a
+      href="/search"
+      class="text-5xl font-bold uppercase tracking-tighter text-[#A8A29E] hover:text-[#1C1917] hover:pl-4 transition-all duration-300 pb-2"
+    >
+      Search
+    </a>
   </nav>
+
+  <div class="border-t border-[#D6D3D1] pt-6 flex justify-between text-[10px] font-mono uppercase tracking-widest text-[#78716C]">
+    <span>Bushido Global</span>
+    <span>v.2026.1</span>
+  </div>
 </div>
 
 <script>
-  // Simple Vanilla JS Toggle Logic
   document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.getElementById('mobile-menu-toggle');
-    const closeButton = document.getElementById('mobile-menu-close');
-    const drawer = document.getElementById('mobile-menu-drawer');
+    const trigger = document.getElementById('mobile-menu-trigger');
+    const closeBtn = document.getElementById('mobile-menu-close');
+    const overlay = document.getElementById('mobile-menu-overlay');
 
     function toggleMenu() {
-      // Toggle the transform class to slide in/out
-      drawer.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('translate-y-full');
+      // Lock scroll when open
+      if (overlay.classList.contains('translate-y-full')) {
+        document.body.style.overflow = '';
+      } else {
+        document.body.style.overflow = 'hidden';
+      }
     }
 
-    if (toggleButton) toggleButton.addEventListener('click', toggleMenu);
-    if (closeButton) closeButton.addEventListener('click', toggleMenu);
-  });
-
-  document.getElementById('header-cart-btn').addEventListener('click', (e) => {
-    e.preventDefault();
-    cartDrawer.open();
+    if (trigger) trigger.addEventListener('click', toggleMenu);
+    if (closeBtn) closeBtn.addEventListener('click', toggleMenu);
   });
 </script>
 
 {% schema %}
-{ "name": "Header", "settings": [], "presets": [] }
+{ "name": "Dock Navigation", "settings": [] }
 {% endschema %}

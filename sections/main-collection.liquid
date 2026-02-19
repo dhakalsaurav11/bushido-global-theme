@@ -1,0 +1,53 @@
+<section class="min-h-screen bg-[#F5F5F4] text-[#1C1917] pt-24 pb-32">
+  <div class="border-b border-[#D6D3D1] px-6 py-12 md:px-12 bg-white">
+    <h1 class="text-6xl md:text-9xl font-bold uppercase tracking-tighter leading-none text-[#1C1917] opacity-90">
+      {{ collection.title }}
+    </h1>
+    <div class="flex justify-between items-end mt-4">
+      <p class="text-[10px] font-mono uppercase tracking-widest text-[#78716C]">
+        Index // {{ collection.products_count }} Items
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-l border-[#D6D3D1]">
+    {% for product in collection.products %}
+      <a
+        href="{{ product.url }}"
+        class="group relative block border-r border-b border-[#D6D3D1] bg-white hover:bg-[#FAFAFA] transition-colors aspect-[3/4] overflow-hidden"
+      >
+        <div class="w-full h-full relative">
+          {% if product.featured_image %}
+            <img
+              src="{{ product.featured_image | image_url: width: 800 }}"
+              alt="{{ product.title }}"
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+            >
+          {% endif %}
+
+          <div
+            class="absolute inset-0 bg-[#EA580C]/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none mix-blend-multiply"
+          ></div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 w-full bg-white/90 backdrop-blur border-t border-[#D6D3D1] p-4 flex justify-between items-center transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+          <div>
+            <h3 class="text-sm font-bold uppercase tracking-tight text-black">{{ product.title }}</h3>
+            <p class="text-xs font-mono text-[#78716C]">{{ product.price | money }}</p>
+          </div>
+          <span class="w-8 h-8 flex items-center justify-center bg-black text-white rounded-full text-xs">→</span>
+        </div>
+
+        <div class="absolute top-4 left-4 mix-blend-difference text-white text-[10px] font-mono tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity">
+          IMG.0{{ forloop.index }}
+        </div>
+      </a>
+    {% else %}
+      <div class="col-span-full p-24 text-center font-mono uppercase text-[#A8A29E]">/ No Data Found /</div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Archive Grid", "settings": [] }
+{% endschema %}

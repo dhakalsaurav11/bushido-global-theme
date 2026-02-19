@@ -1,55 +1,158 @@
-<section class="max-w-7xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-16">
-  <div class="product-media space-y-4">
-    {% for media in product.media %}
-      <div class="aspect-square bg-gray-100 overflow-hidden rounded-lg">
-        <img
-          src="{{ media | image_url: width: 1000 }}"
-          alt="{{ media.alt | escape }}"
-          class="w-full h-full object-cover"
-        >
-      </div>
-    {% else %}
-      <div class="aspect-square bg-gray-100 flex items-center justify-center text-gray-400">
-        {{ 'product-1' | placeholder_svg_tag: 'w-32 h-32 opacity-20' }}
-      </div>
-    {% endfor %}
-  </div>
+<section class="min-h-screen bg-[#F5F5F4] text-[#1C1917] font-sans border-b border-[#D6D3D1]">
+  <div class="grid grid-cols-1 lg:grid-cols-12 min-h-screen">
+    <div class="lg:col-span-8 border-r border-[#D6D3D1] bg-[#D6D3D1] grid grid-cols-2 gap-px">
+      {% if product.media.size > 0 %}
+        {% for media in product.media %}
+          <div class="relative group bg-[#F5F5F4] aspect-[3/4] overflow-hidden flex items-center justify-center">
+            {% case media.media_type %}
+              {% when 'image' %}
+                <img
+                  src="{{ media | image_url: width: 1000 }}"
+                  alt="{{ media.alt }}"
+                  class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 ease-out"
+                  loading="lazy"
+                >
+                <div class="absolute top-4 left-4 bg-white/90 backdrop-blur border border-[#D6D3D1] px-2 py-1 text-[10px] font-mono tracking-widest uppercase z-10">
+                  IMG.0{{ forloop.index }}
+                </div>
 
-  <div class="product-details sticky top-24 h-fit space-y-8">
-    <div class="border-b border-gray-200 pb-8">
-      <h1 class="text-4xl font-black uppercase tracking-tighter mb-4">{{ product.title }}</h1>
-      <p class="text-2xl font-mono text-gray-600">{{ product.price | money }}</p>
+              {% when 'model' %}
+                <div class="w-full h-full cursor-grab active:cursor-grabbing">
+                  {{
+                    media
+                    | model_viewer_tag:
+                      image_size: '1000x',
+                      reveal: 'interaction',
+                      toggleable: true,
+                      data-model-id: media.id,
+                      class: 'w-full h-full object-contain'
+                  }}
+                </div>
+
+                <div class="absolute top-4 left-4 bg-[#EA580C] text-white border border-[#EA580C] px-2 py-1 text-[10px] font-bold font-mono tracking-widest uppercase z-10 animate-pulse">
+                  [INTERACTIVE_3D]
+                </div>
+
+                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-[9px] font-mono uppercase tracking-widest text-[#78716C] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                  [ DRAG TO ROTATE ]
+                </div>
+
+              {% when 'video' %}
+                {{
+                  media
+                  | video_tag:
+                    controls: true,
+                    autoplay: true,
+                    loop: true,
+                    class: 'w-full h-full object-cover grayscale group-hover:grayscale-0'
+                }}
+                <div class="absolute top-4 left-4 bg-black text-white px-2 py-1 text-[10px] font-mono tracking-widest uppercase z-10">
+                  MOV.0{{ forloop.index }}
+                </div>
+            {% endcase %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-span-2 h-[50vh] flex items-center justify-center bg-[#E7E5E4] text-[#A8A29E] font-mono uppercase tracking-widest">
+          / No Visual Data /
+        </div>
+      {% endif %}
     </div>
 
-    {% form 'product', product %}
-      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+    <div class="lg:col-span-4 relative bg-[#F5F5F4]">
+      <div class="sticky top-0 h-screen overflow-y-auto flex flex-col justify-between">
+        <div class="p-6 md:p-8 border-b border-[#D6D3D1] bg-white">
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-[10px] font-mono uppercase tracking-widest text-[#78716C]">
+              ID: {{ product.id | slice: 0, 8 }} // {{ product.vendor }}
+            </span>
+            {% unless product.available %}
+              <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-widest">
+                Sold Out
+              </span>
+            {% endunless %}
+          </div>
 
-      <button
-        type="submit"
-        name="add"
-        class="w-full bg-black text-white font-bold uppercase py-4 tracking-widest hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        {% unless product.available %}
-          disabled
-        {% endunless %}
-      >
-        {% if product.available %}
-          Add to Cart
-        {% else %}
-          Sold Out
-        {% endif %}
-      </button>
-    {% endform %}
+          <h1 class="text-3xl md:text-4xl font-bold uppercase tracking-tighter leading-[0.9] mb-4 text-[#1C1917]">
+            {{ product.title }}
+          </h1>
 
-    <div class="prose prose-sm text-gray-600 mt-8">
-      {{ product.description }}
+          <div class="text-xl font-mono text-[#1C1917] border-l-2 border-[#EA580C] pl-4">
+            {{ product.price | money }}
+          </div>
+        </div>
+
+        <div class="flex-grow px-6 md:px-8 py-8 space-y-8 bg-[#F5F5F4]">
+          {% form 'product', product %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+            {% unless product.has_only_default_variant %}
+              <div class="space-y-3">
+                <label class="block text-[10px] font-mono uppercase tracking-widest text-[#78716C]">
+                  Select Configuration
+                </label>
+                <div class="flex flex-wrap gap-2">
+                  {% for option in product.options_with_values %}
+                    {% if option.name == 'Size' %}
+                      {% for value in option.values %}
+                        <label class="cursor-pointer">
+                          <input
+                            type="radio"
+                            name="option{{ option.position }}"
+                            value="{{ value }}"
+                            class="peer sr-only"
+                          >
+                          <div class="min-w-[3rem] h-12 px-4 flex items-center justify-center border border-[#D6D3D1] bg-white text-xs font-bold uppercase hover:border-black peer-checked:bg-[#1C1917] peer-checked:text-white peer-checked:border-[#1C1917] transition-all">
+                            {{ value }}
+                          </div>
+                        </label>
+                      {% endfor %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endunless %}
+
+            <div class="border-t border-b border-[#D6D3D1] py-6 my-6">
+              <h3 class="text-[10px] font-mono uppercase tracking-widest text-[#78716C] mb-2">Technical Description</h3>
+              <div class="prose prose-sm prose-stone max-w-none text-[#57534E] font-sans leading-relaxed text-sm">
+                {{ product.description }}
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              name="add"
+              class="w-full bg-[#1C1917] text-white h-14 font-bold uppercase tracking-[0.2em] hover:bg-[#EA580C] transition-colors flex items-center justify-center gap-4 group border border-transparent hover:border-[#EA580C]"
+              {% unless product.available %}
+                disabled
+              {% endunless %}
+            >
+              {% if product.available %}
+                <span>Initialize Order</span>
+                <span class="group-hover:translate-x-1 transition-transform">→</span>
+              {% else %}
+                <span>Stock Depleted</span>
+              {% endif %}
+            </button>
+
+            <p class="mt-4 text-[10px] font-mono text-center text-[#78716C] uppercase tracking-widest">
+              Secure Encrypted Transaction
+            </p>
+          {% endform %}
+        </div>
+
+        <div class="border-t border-[#D6D3D1] p-4 bg-white sticky bottom-0 z-10">
+          <div class="flex justify-between text-[10px] font-mono uppercase tracking-widest text-[#A8A29E]">
+            <span>REF: {{ product.handle }}</span>
+            <span>V.2026</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 {% schema %}
-{
-  "name": "Main Product",
-  "settings": [],
-  "presets": []
-}
+{ "name": "Archive Product (Grid)", "settings": [] }
 {% endschema %}

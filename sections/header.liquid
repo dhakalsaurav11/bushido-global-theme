@@ -61,17 +61,27 @@
   </div>
 
   <nav class="flex-grow flex flex-col justify-center space-y-4">
-    {% for link in linklists['main-menu'].links %}
-      <a
-        href="{{ link.url }}"
-        class="text-5xl font-bold uppercase tracking-tighter text-[#1C1917] hover:text-[#EA580C] hover:pl-4 transition-all duration-300 border-b border-transparent hover:border-[#EA580C] pb-2 w-full"
-      >
-        {{ link.title }}
-      </a>
-    {% endfor %}
+    <a
+      href="/"
+      class="text-5xl font-bold uppercase tracking-tighter text-[#1C1917] hover:text-[#EA580C] hover:pl-4 transition-all duration-300 border-b border-transparent hover:border-[#EA580C] pb-2 w-full"
+    >
+      Home
+    </a>
+    <a
+      href="/collections/all"
+      class="text-5xl font-bold uppercase tracking-tighter text-[#1C1917] hover:text-[#EA580C] hover:pl-4 transition-all duration-300 border-b border-transparent hover:border-[#EA580C] pb-2 w-full"
+    >
+      Catalog
+    </a>
+    <a
+      href="/pages/about"
+      class="text-5xl font-bold uppercase tracking-tighter text-[#1C1917] hover:text-[#EA580C] hover:pl-4 transition-all duration-300 border-b border-transparent hover:border-[#EA580C] pb-2 w-full"
+    >
+      Origin
+    </a>
     <a
       href="/search"
-      class="text-5xl font-bold uppercase tracking-tighter text-[#A8A29E] hover:text-[#1C1917] hover:pl-4 transition-all duration-300 pb-2"
+      class="text-5xl font-bold uppercase tracking-tighter text-[#A8A29E] hover:text-[#1C1917] hover:pl-4 transition-all duration-300 pb-2 mt-8"
     >
       Search
     </a>

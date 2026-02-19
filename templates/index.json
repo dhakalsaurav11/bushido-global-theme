@@ -1,17 +1,21 @@
 {
   "sections": {
-    "main": {
-      "type": "hero"
-    },
-    "featured_products": {
-      "type": "product-grid",
+    "hero": {
+      "type": "hero-manifesto",
       "settings": {
-        "title": "New Arrivals"
+      }
+    },
+    "archive_grid": {
+      "type": "featured-archive",
+      "settings": {
+        "title": "Latest Arrivals",
+        "collection": "all",
+        "limit": 8
       }
     }
   },
   "order": [
-    "main",
-    "featured_products"
+    "hero",
+    "archive_grid"
   ]
 }

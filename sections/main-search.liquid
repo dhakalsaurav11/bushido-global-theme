@@ -44,7 +44,10 @@
                   {% if item.featured_image %}
                     <img
                       src="{{ item.featured_image | image_url: width: 600 }}"
-                      alt="{{ item.title }}"
+                      alt="{{ item.title | escape }}"
+                      width="600"
+                      height="600"
+                      loading="lazy"
                       class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     >
                   {% endif %}
